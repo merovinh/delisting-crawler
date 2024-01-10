@@ -15,7 +15,7 @@ if (!process.env.TELEGRAM_CHAT_ID) {
     throw new Error("Please add TELEGRAM_CHAT_ID to .env");
 }
 
-const dc = new DelistingCrawler("exchange-markets.json", crawlSources, 100);
+const dc = new DelistingCrawler("exchange-markets.json", crawlSources);
 
 dc.run();
 

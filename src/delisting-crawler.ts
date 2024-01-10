@@ -10,8 +10,7 @@ export class DelistingCrawler {
 
     constructor(
         public readonly exchangeMarketsFilePath: string,
-        public readonly crawlSources: CrawlSources,
-        public readonly eachCoinCheckIntervalMs = 1000
+        public readonly crawlSources: CrawlSources
     ) {
         this.listenExchangeMarkets();
     }
