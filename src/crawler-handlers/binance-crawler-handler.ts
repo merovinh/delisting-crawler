@@ -6,25 +6,9 @@ import {
     notifyAndLogInfo,
     notifyAndLogWarn,
 } from "../logger";
-import type {
-    DelistedSymbol,
-    DelistingAnnouncementParser,
-    DelistingCrawlerParser,
-} from "../types";
+import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
 
 const topic = "binance";
-
-export const binanceCoinHandler: DelistingCrawlerParser = (
-    exchange,
-    market,
-    requestUrl,
-    response
-) => {
-    try {
-    } catch (e) {
-        notifyAndLogError((e as Error).message, topic);
-    }
-};
 
 export const binanceAnnouncementHandler: DelistingAnnouncementParser = async (
     exchange,

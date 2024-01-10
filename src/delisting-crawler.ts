@@ -1,13 +1,6 @@
-import {
-    binanceAnnouncementHandler,
-    binanceCoinHandler,
-} from "./crawler-handlers/binance-crawler-handler";
+import { binanceAnnouncementHandler } from "./crawler-handlers/binance-crawler-handler";
 import { bybitAnnouncementHandler } from "./crawler-handlers/bybit-crawler-handler";
-import {
-    kucoinAnnouncementHandler,
-    kucoinCoinHandler,
-} from "./crawler-handlers/kucoin-crawler-handler";
-import { okxCoinHandler } from "./crawler-handlers/okx-crawler-handler";
+import { kucoinAnnouncementHandler } from "./crawler-handlers/kucoin-crawler-handler";
 import { ExchangeEnum } from "./enums";
 import { logger } from "./logger";
 import type { CrawlSources, ExchangeMarkets } from "./types";
@@ -24,18 +17,7 @@ export class DelistingCrawler {
     }
 
     async run(): Promise<void> {
-        // this.checkEachCoin();
         this.checkAnnouncementPages();
-    }
-
-    async checkEachCoin() {
-        this.checkEachCoinWithInterval(ExchangeEnum.Okx, okxCoinHandler);
-        this.checkEachCoinWithInterval(ExchangeEnum.Kucoin, kucoinCoinHandler);
-        this.checkEachCoinWithInterval(
-            ExchangeEnum.Binance,
-            binanceCoinHandler
-        );
-        // TODO: can't find api url for bybit
     }
 
     async checkAnnouncementPages() {
@@ -65,7 +47,7 @@ export class DelistingCrawler {
         intervalMs: number,
         retryMs: number
     ) {
-        const dataSourceUrl = this.crawlSources.allCoins[exchange];
+        const dataSourceUrl = this.crawlSources.announcement[exchange];
 
         let markets = [...(this.exchangeMarkets[exchange] || [])];
 
@@ -114,10 +96,6 @@ export class DelistingCrawler {
                     );
                 }
 
-                logger.info(`Response is correct, exchange: ${exchange}`, {
-                    label: "Crawler",
-                });
-
                 setTimeout(() => {
                     this.checkAnnouncementPageWithInterval(
                         exchange,
@@ -134,37 +112,6 @@ export class DelistingCrawler {
             );
             console.error(message);
         }
-    }
-
-    async checkEachCoinWithInterval(exchange: ExchangeEnum, callback: any) {
-        let markets = [...(this.exchangeMarkets[exchange] || [])];
-        const dataSourceUrl = this.crawlSources.oneCoin[exchange];
-
-        setInterval(async () => {
-            const _market = markets.shift();
-            const market = _market?.replace("/", "-"); // In the json file all of the symbols are with /, but in this request we need -
-
-            if (!market || !dataSourceUrl) {
-                markets = [...(this.exchangeMarkets[exchange] || [])];
-                return;
-            }
-
-            const requestUrl = dataSourceUrl.replace("{{symbol}}", market);
-            let response;
-
-            try {
-                const rawResponse = await fetch(requestUrl);
-                response = await rawResponse.json();
-            } catch (e) {
-                const message = (e as Error).message;
-                console.error(
-                    `Error, exchange: ${exchange}, symbol: ${market}, url: ${requestUrl}`
-                );
-                console.error(message);
-            }
-
-            await callback(exchange, market, requestUrl, response);
-        }, this.eachCoinCheckIntervalMs);
     }
 
     private async listenExchangeMarkets(): Promise<void> {

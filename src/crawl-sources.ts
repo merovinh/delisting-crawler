@@ -1,11 +1,5 @@
 export const crawlSources = {
-    oneCoin: {
-        okx: "https://www.okx.com/priapi/v5/public/trade/notice?instId={{symbol}}&instType=SPOT", // DOME-USDT
-        kucoin: "https://www.kucoin.com/_api/trade-front/risk/tips/{{symbol}}", // HERO-USDT
-        binance: "",
-        bybit: "",
-    },
-    allCoins: {
+    announcement: {
         // Announcement pages
         okx: "",
         kucoin: "https://www.kucoin.com/_api/cms/articles?category=delistings&page=1&pageSize=1",

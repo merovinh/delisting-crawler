@@ -1,27 +1,9 @@
 import { SYMBOL_PAIR_REGEXP } from "../constants";
 import { delistingStore } from "../delisting-store";
 import { logger, notifyAndLogError, notifyAndLogWarn } from "../logger";
-import type {
-    DelistedSymbol,
-    DelistingAnnouncementParser,
-    DelistingCrawlerParser,
-} from "../types";
+import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
 
 const topic = "bybit";
-
-export const bybitCoinHandler: DelistingCrawlerParser = (
-    exchange,
-    market,
-    requestUrl,
-    response
-) => {
-    try {
-        // TODO: can't find api url for bybit
-        throw new Error("not implemented");
-    } catch (e) {
-        notifyAndLogError((e as Error).message, topic);
-    }
-};
 
 export const bybitAnnouncementHandler: DelistingAnnouncementParser = async (
     exchange,

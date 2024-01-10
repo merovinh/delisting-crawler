@@ -1,53 +1,9 @@
 import { SYMBOL_PAIR_REGEXP } from "../constants";
 import { delistingStore } from "../delisting-store";
-import { logger, notifyAndLogError, notifyAndLogWarn } from "../logger";
-import type {
-    DelistedSymbol,
-    DelistingAnnouncementParser,
-    DelistingCrawlerParser,
-} from "../types";
+import { logger, notifyAndLogError } from "../logger";
+import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
 
 const topic = "kucoin";
-
-export const kucoinCoinHandler: DelistingCrawlerParser = async (
-    exchange,
-    market,
-    requestUrl,
-    response
-) => {
-    try {
-        if (
-            response &&
-            response.data &&
-            (response.data.includes("Risk Warning") ||
-                response.data.includes("Special Treatment"))
-        ) {
-            await delistingStore.addSymbols([
-                {
-                    exchange,
-                    symbol: market,
-                    timestamp: Date.now(),
-                    url: requestUrl,
-                },
-            ]);
-        } else if (response.data !== undefined) {
-            // All is ok, coin is not delisted
-        } else {
-            notifyAndLogWarn(
-                `Unrecognized response, exchange: ${exchange}, symbol: ${market}, url: ${requestUrl}`,
-                topic
-            );
-            try {
-                logger.info(JSON.stringify(response));
-            } catch (e) {}
-        }
-    } catch (e) {
-        notifyAndLogError(
-            `Error: ${exchange}, url: ${requestUrl}, ${(e as Error).message}`,
-            topic
-        );
-    }
-};
 
 export const kucoinAnnouncementHandler: DelistingAnnouncementParser = async (
     exchange,
