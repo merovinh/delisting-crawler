@@ -1,6 +1,6 @@
 import { SYMBOL_PAIR_REGEXP } from "../constants";
 import { delistingStore } from "../delisting-store";
-import { logger, notifyAndLogError, notifyAndLogWarn } from "../logger";
+import { logger, notifyAndLogError } from "../logger";
 import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
 
 const topic = "bybit";
@@ -49,7 +49,7 @@ export const bybitAnnouncementHandler: DelistingAnnouncementParser = async (
                 );
             }
         } else {
-            notifyAndLogWarn(
+            notifyAndLogError(
                 `Unrecognized response, exchange: ${exchange}, url: ${requestUrl}`,
                 topic
             );

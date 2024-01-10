@@ -2,7 +2,7 @@ import { binanceAnnouncementHandler } from "./crawler-handlers/binance-crawler-h
 import { bybitAnnouncementHandler } from "./crawler-handlers/bybit-crawler-handler";
 import { kucoinAnnouncementHandler } from "./crawler-handlers/kucoin-crawler-handler";
 import { ExchangeEnum } from "./enums";
-import { logger } from "./logger";
+import { logger, notifyAndLogError } from "./logger";
 import type { CrawlSources, ExchangeMarkets } from "./types";
 
 export class DelistingCrawler {
@@ -105,11 +105,9 @@ export class DelistingCrawler {
                 }, newInterval);
             }
         } catch (e) {
-            const message = (e as Error).message;
-            console.error(
-                `Error, exchange: ${exchange}, url: ${dataSourceUrl}`
-            );
-            console.error(message);
+            const msg = (e as Error).message;
+            notifyAndLogError(msg, "Crawler");
+            throw new Error(msg);
         }
     }
 

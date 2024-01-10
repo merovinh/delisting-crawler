@@ -35,12 +35,7 @@ export const logger: Logger = createLogger({
 
 export const notifyAndLogError = (message: string, topic: string): void => {
     logger.error(message, { label: topic });
-    notify(message);
-};
-
-export const notifyAndLogWarn = (message: string, topic: string): void => {
-    logger.warn(message, { label: topic });
-    notify(message);
+    notify(message, true);
 };
 
 export const notifyAndLogInfo = (message: string, topic: string): void => {

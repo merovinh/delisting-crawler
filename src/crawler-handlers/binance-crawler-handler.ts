@@ -1,11 +1,6 @@
 import { SYMBOL_PAIR_REGEXP } from "../constants";
 import { delistingStore } from "../delisting-store";
-import {
-    logger,
-    notifyAndLogError,
-    notifyAndLogInfo,
-    notifyAndLogWarn,
-} from "../logger";
+import { logger, notifyAndLogError, notifyAndLogInfo } from "../logger";
 import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
 
 const topic = "binance";
@@ -76,7 +71,7 @@ export const binanceAnnouncementHandler: DelistingAnnouncementParser = async (
                 );
             }
         } else {
-            notifyAndLogWarn(
+            notifyAndLogError(
                 `Unrecognized response, exchange: ${exchange}, url: ${requestUrl}`,
                 topic
             );
