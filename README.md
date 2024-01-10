@@ -4,6 +4,8 @@ Multi exchange delisting crawler monitoring the announcement page on each exchan
 
 In case a new delisting symbol is found you will be notified in your telegram.
 
+Crawler parses announcement page with interval. In case it gets an error "Too Many Requests", it will increase an interval to avoid ban.
+
 # Installation
 
 Environment vars. Make a copy of env file and change it.
