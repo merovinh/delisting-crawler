@@ -56,7 +56,10 @@ export const kucoinAnnouncementHandler: DelistingAnnouncementParser = async (
                 );
             }
         } else {
-            notifyAndLogError(`Error: ${exchange}, url: ${requestUrl}`, topic);
+            notifyAndLogError(
+                `Unrecognized response, exchange: ${exchange}, url: ${requestUrl}`,
+                topic
+            );
             try {
                 logger.info(JSON.stringify(response));
             } catch (e) {}

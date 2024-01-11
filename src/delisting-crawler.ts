@@ -1,7 +1,8 @@
 import { binanceAnnouncementHandler } from "./crawler-handlers/binance-crawler-handler";
 import { bybitAnnouncementHandler } from "./crawler-handlers/bybit-crawler-handler";
 import { kucoinAnnouncementHandler } from "./crawler-handlers/kucoin-crawler-handler";
-import { ExchangeEnum } from "./enums";
+import { okxAnnouncementHandler } from "./crawler-handlers/okx-crawler-handler";
+import { ExchangeEnum, ResourceType } from "./enums";
 import { logger, notifyAndLogError } from "./logger";
 import type { CrawlSources, ExchangeMarkets } from "./types";
 
@@ -23,20 +24,26 @@ export class DelistingCrawler {
         this.checkAnnouncementPageWithInterval(
             ExchangeEnum.Bybit,
             bybitAnnouncementHandler,
-            2000,
-            2000
+            5000,
+            5000
         );
         this.checkAnnouncementPageWithInterval(
             ExchangeEnum.Kucoin,
             kucoinAnnouncementHandler,
-            2000,
-            2000
+            5000,
+            5000
         );
         this.checkAnnouncementPageWithInterval(
             ExchangeEnum.Binance,
             binanceAnnouncementHandler,
             10000,
             10000
+        );
+        this.checkAnnouncementPageWithInterval(
+            ExchangeEnum.Okx,
+            okxAnnouncementHandler,
+            5000,
+            5000
         );
     }
 
@@ -57,7 +64,7 @@ export class DelistingCrawler {
         let response;
 
         try {
-            const rawResponse = await fetch(dataSourceUrl);
+            const rawResponse = await fetch(dataSourceUrl.url);
             if (
                 rawResponse.statusText
                     .toLocaleLowerCase()
@@ -79,7 +86,9 @@ export class DelistingCrawler {
                     );
                 }, retryIn);
             } else {
-                response = await rawResponse.json();
+                response = await (dataSourceUrl.type === ResourceType.JSON
+                    ? rawResponse.json()
+                    : rawResponse.text());
                 await callback(exchange, markets, dataSourceUrl, response);
                 // in case the default interval is cause of To Many Requests, we should increase it
                 let newInterval = intervalMs;

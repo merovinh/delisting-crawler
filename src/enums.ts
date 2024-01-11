@@ -4,3 +4,8 @@ export enum ExchangeEnum {
     Bybit = "bybit",
     Okx = "okx",
 }
+
+export enum ResourceType {
+    JSON = "JSON",
+    TEXT = "TEXT",
+}

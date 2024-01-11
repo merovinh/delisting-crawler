@@ -2,5 +2,5 @@
     "kucoin": ["VRA/USDT"],
     "binance": ["HOOK/BNB"],
     "bybit": ["VRA/USDT"],
-    "okx": ["DOME/USDT"]
+    "okx": ["DOME/USDT", "ANT/USDC"]
 }

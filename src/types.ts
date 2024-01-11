@@ -1,12 +1,16 @@
-import type { ExchangeEnum } from "./enums";
+import type { ExchangeEnum, ResourceType } from "./enums";
 
 export interface ExchangeMarkets {
     [exchange: string]: string[];
 }
 
+export interface CrawlSource {
+    url: string;
+    type: ResourceType;
+}
 export interface CrawlSources {
     announcement: {
-        [exchange: string]: string;
+        [exchange: string]: CrawlSource;
     };
 }
 
