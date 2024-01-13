@@ -70,7 +70,7 @@ export class DelistingCrawler {
             response = await (dataSourceUrl.type === ResourceType.JSON
                 ? rawResponse.data
                 : rawResponse);
-            await callback(exchange, markets, dataSourceUrl, response);
+            await callback(exchange, markets, dataSourceUrl.url, response);
             // in case the default interval is cause of To Many Requests, we should increase it
             let newInterval = intervalMs;
             if (retryMs !== intervalMs) {
