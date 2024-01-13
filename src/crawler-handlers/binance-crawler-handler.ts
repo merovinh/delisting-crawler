@@ -1,5 +1,6 @@
 import { SYMBOL_PAIR_REGEXP } from "../constants.js";
 import { delistingStore } from "../delisting-store.js";
+import axios from "axios";
 import { logger, notifyAndLogError, notifyAndLogInfo } from "../logger.js";
 import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
 
@@ -37,9 +38,9 @@ export const binanceAnnouncementHandler: DelistingAnnouncementParser = async (
 
             try {
                 const delistingSymbols: DelistedSymbol[] = [];
-                const rawResponse = await fetch(url);
-                const content = await rawResponse.text();
-                const regexpResult = content.match(SYMBOL_PAIR_REGEXP); // should be an array, like ['CGG/USDT', 'ACA/BTC', 'FALCONS/USDT']
+                const content: any = await axios.get(url);
+                // TODO: debug
+                const regexpResult = content.data.match(SYMBOL_PAIR_REGEXP); // should be an array, like ['CGG/USDT', 'ACA/BTC', 'FALCONS/USDT']
                 const result = [...new Set([...(regexpResult || [])])];
 
                 if (result && result.length) {

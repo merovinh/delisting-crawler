@@ -1,5 +1,6 @@
 import { SYMBOL_PAIR_REGEXP } from "../constants.js";
 import { delistingStore } from "../delisting-store.js";
+import axios from "axios";
 import { logger, notifyAndLogError } from "../logger.js";
 import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
 
@@ -18,12 +19,12 @@ export const kucoinAnnouncementHandler: DelistingAnnouncementParser = async (
                 return;
             }
 
-            // example https://assets.staticimg.com/cms/articles/en-st-kucoin-will-delist-certain-projects-20231221.json
+            // const url = "https://assets.staticimg.com/cms/articles/en-st-kucoin-will-delist-certain-projects-20231221.json";
             const url = `https://assets.staticimg.com/cms/articles${response.items[0].path}.json`;
             try {
                 const delistingSymbols: DelistedSymbol[] = [];
-                const rawResponse = await fetch(url);
-                const content: any = await rawResponse.json();
+                const rawResponse: any = await axios.get(url);
+                const content: any = rawResponse.data;
                 const regexpResult = content.content.match(SYMBOL_PAIR_REGEXP); // should be an array, like ['CGG/USDT', 'ACA/BTC', 'FALCONS/USDT']
                 const result = [...new Set([...(regexpResult || [])])];
 

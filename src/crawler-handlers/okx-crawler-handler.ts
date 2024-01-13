@@ -1,4 +1,5 @@
 import { delistingStore } from "../delisting-store.js";
+import axios from "axios";
 import { logger, notifyAndLogError } from "../logger.js";
 import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
 
@@ -13,7 +14,9 @@ export const okxAnnouncementHandler: DelistingAnnouncementParser = async (
     try {
         if (response) {
             const regexpResult = [
-                ...response.matchAll(/index_listWrap.*?href="(\/help\/.*?)"/g),
+                ...response.data.matchAll(
+                    /index_listWrap.*?href="(\/help\/.*?)"/g
+                ),
             ];
             if (!regexpResult || !regexpResult.length) {
                 notifyAndLogError(
@@ -28,9 +31,10 @@ export const okxAnnouncementHandler: DelistingAnnouncementParser = async (
 
             try {
                 const delistingSymbols: DelistedSymbol[] = [];
-                const rawResponse = await fetch(url);
-                const content = await rawResponse.text();
-                const regexpResult = content.match(/[0-9A-Z]+[\/\-][0-9A-Z]+/g); // should be an array, like ['CGG/USDT', 'ANT-USDC']
+                const content: any = await axios.get(url);
+                const regexpResult = content.data.match(
+                    /[0-9A-Z]+[\/\-][0-9A-Z]+/g
+                ); // should be an array, like ['CGG/USDT', 'ANT-USDC']
                 const result = [...new Set([...(regexpResult || [])])].map(
                     (s) => s.replace("-", "/")
                 );

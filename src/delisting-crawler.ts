@@ -6,6 +6,7 @@ import { ExchangeEnum, ResourceType } from "./enums.js";
 import { logger, notifyAndLogError } from "./logger.js";
 import type { CrawlSources, ExchangeMarkets } from "./types.js";
 import * as fs from "fs";
+import axios from "axios";
 
 export class DelistingCrawler {
     exchangeMarkets: ExchangeMarkets = {};
@@ -65,9 +66,40 @@ export class DelistingCrawler {
         let response;
 
         try {
-            const rawResponse = await fetch(dataSourceUrl.url);
+            const rawResponse: any = await axios.get(dataSourceUrl.url);
+            response = await (dataSourceUrl.type === ResourceType.JSON
+                ? rawResponse.data
+                : rawResponse);
+            await callback(exchange, markets, dataSourceUrl, response);
+            // in case the default interval is cause of To Many Requests, we should increase it
+            let newInterval = intervalMs;
+            if (retryMs !== intervalMs) {
+                newInterval = intervalMs + 1000;
+                logger.info(
+                    `Announcement request interval increased from ${
+                        intervalMs / 1000
+                    } to ${newInterval / 1000} sec, exchange: ${exchange}`,
+                    {
+                        label: "Crawler",
+                    }
+                );
+            }
+
+            setTimeout(() => {
+                this.checkAnnouncementPageWithInterval(
+                    exchange,
+                    callback,
+                    newInterval,
+                    newInterval
+                );
+            }, newInterval);
+        } catch (e) {
+            const err: any = e;
             if (
-                rawResponse.statusText
+                err &&
+                err.response &&
+                err.response.statusText &&
+                err.response.statusText
                     .toLocaleLowerCase()
                     .includes("too many requests")
             ) {
@@ -87,37 +119,10 @@ export class DelistingCrawler {
                     );
                 }, retryIn);
             } else {
-                response = await (dataSourceUrl.type === ResourceType.JSON
-                    ? rawResponse.json()
-                    : rawResponse.text());
-                await callback(exchange, markets, dataSourceUrl, response);
-                // in case the default interval is cause of To Many Requests, we should increase it
-                let newInterval = intervalMs;
-                if (retryMs !== intervalMs) {
-                    newInterval = intervalMs + 1000;
-                    logger.info(
-                        `Announcement request interval increased from ${
-                            intervalMs / 1000
-                        } to ${newInterval / 1000} sec, exchange: ${exchange}`,
-                        {
-                            label: "Crawler",
-                        }
-                    );
-                }
-
-                setTimeout(() => {
-                    this.checkAnnouncementPageWithInterval(
-                        exchange,
-                        callback,
-                        newInterval,
-                        newInterval
-                    );
-                }, newInterval);
+                const msg = (e as Error).message;
+                notifyAndLogError(msg, "Crawler");
+                throw new Error(msg);
             }
-        } catch (e) {
-            const msg = (e as Error).message;
-            notifyAndLogError(msg, "Crawler");
-            throw new Error(msg);
         }
     }
 
