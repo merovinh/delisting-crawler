@@ -35,7 +35,7 @@ export const kucoinAnnouncementHandler: DelistingAnnouncementParser = async (
                                 exchange,
                                 symbol: result[i],
                                 timestamp: Date.now(),
-                                url,
+                                url: `https://www.kucoin.com/announcement${response.items[0].path}`,
                             });
                         }
                     }

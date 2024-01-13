@@ -3,8 +3,10 @@ import { delistingStore } from "../delisting-store.js";
 import axios from "axios";
 import { logger, notifyAndLogError, notifyAndLogInfo } from "../logger.js";
 import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
+import jsdom from "jsdom";
 
 const topic = "binance";
+const { JSDOM } = jsdom;
 
 export const binanceAnnouncementHandler: DelistingAnnouncementParser = async (
     exchange,
@@ -39,8 +41,26 @@ export const binanceAnnouncementHandler: DelistingAnnouncementParser = async (
             try {
                 const delistingSymbols: DelistedSymbol[] = [];
                 const content: any = await axios.get(url);
-                // TODO: debug
-                const regexpResult = content.data.match(SYMBOL_PAIR_REGEXP); // should be an array, like ['CGG/USDT', 'ACA/BTC', 'FALCONS/USDT']
+
+                // convert string to dom
+                const dom = new JSDOM(content.data);
+                const document = dom.window.document;
+
+                // Select element with announce
+                const element = document.getElementById("support_article");
+
+                if (!element) {
+                    notifyAndLogError(
+                        `Can't find support_article element, ${exchange}, url: ${requestUrl}`,
+                        topic
+                    );
+                    return;
+                }
+
+                // Convert element to string
+                const elementString = element.outerHTML;
+
+                const regexpResult = elementString.match(SYMBOL_PAIR_REGEXP); // should be an array, like ['CGG/USDT', 'ACA/BTC', 'FALCONS/USDT']
                 const result = [...new Set([...(regexpResult || [])])];
 
                 if (result && result.length) {
