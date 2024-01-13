@@ -1,10 +1,11 @@
-import { binanceAnnouncementHandler } from "./crawler-handlers/binance-crawler-handler";
-import { bybitAnnouncementHandler } from "./crawler-handlers/bybit-crawler-handler";
-import { kucoinAnnouncementHandler } from "./crawler-handlers/kucoin-crawler-handler";
-import { okxAnnouncementHandler } from "./crawler-handlers/okx-crawler-handler";
-import { ExchangeEnum, ResourceType } from "./enums";
-import { logger, notifyAndLogError } from "./logger";
-import type { CrawlSources, ExchangeMarkets } from "./types";
+import { binanceAnnouncementHandler } from "./crawler-handlers/binance-crawler-handler.js";
+import { bybitAnnouncementHandler } from "./crawler-handlers/bybit-crawler-handler.js";
+import { kucoinAnnouncementHandler } from "./crawler-handlers/kucoin-crawler-handler.js";
+import { okxAnnouncementHandler } from "./crawler-handlers/okx-crawler-handler.js";
+import { ExchangeEnum, ResourceType } from "./enums.js";
+import { logger, notifyAndLogError } from "./logger.js";
+import type { CrawlSources, ExchangeMarkets } from "./types.js";
+import * as fs from "fs";
 
 export class DelistingCrawler {
     exchangeMarkets: ExchangeMarkets = {};
@@ -122,10 +123,12 @@ export class DelistingCrawler {
 
     private async listenExchangeMarkets(): Promise<void> {
         setInterval(async () => {
-            const file = Bun.file(
-                import.meta.dir + `/${this.exchangeMarketsFilePath}`
+            const exchangeMarkets = JSON.parse(
+                fs.readFileSync(
+                    `./dist/${this.exchangeMarketsFilePath}`,
+                    "utf8"
+                )
             );
-            const exchangeMarkets = await file.json();
 
             this.exchangeMarkets = exchangeMarkets;
         }, 1000);

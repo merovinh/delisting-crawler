@@ -1,7 +1,7 @@
-import { SYMBOL_PAIR_REGEXP } from "../constants";
-import { delistingStore } from "../delisting-store";
-import { logger, notifyAndLogError, notifyAndLogInfo } from "../logger";
-import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
+import { SYMBOL_PAIR_REGEXP } from "../constants.js";
+import { delistingStore } from "../delisting-store.js";
+import { logger, notifyAndLogError, notifyAndLogInfo } from "../logger.js";
+import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
 
 const topic = "binance";
 

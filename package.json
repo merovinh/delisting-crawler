@@ -1,17 +1,21 @@
 {
-  "name": "delisting-crawler",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "start": "bun run index.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "winston": "^3.11.0"
-  }
+    "name": "delisting-crawler",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "start": "node --experimental-json-modules dist/index.js",
+        "build": "tsc && npm run copy-assets",
+        "copy-assets": "copyfiles -u 1 \"src/**/*.json\" dist"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "copyfiles": "^2.4.1",
+        "dotenv": "^16.3.1",
+        "winston": "^3.11.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.0"
+    }
 }

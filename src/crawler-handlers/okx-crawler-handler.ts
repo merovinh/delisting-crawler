@@ -1,6 +1,6 @@
-import { delistingStore } from "../delisting-store";
-import { logger, notifyAndLogError } from "../logger";
-import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
+import { delistingStore } from "../delisting-store.js";
+import { logger, notifyAndLogError } from "../logger.js";
+import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
 
 const topic = "okx";
 

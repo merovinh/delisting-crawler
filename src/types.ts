@@ -1,4 +1,4 @@
-import type { ExchangeEnum, ResourceType } from "./enums";
+import type { ExchangeEnum, ResourceType } from "./enums.js";
 
 export interface ExchangeMarkets {
     [exchange: string]: string[];

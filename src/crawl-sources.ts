@@ -1,4 +1,4 @@
-import { ResourceType } from "./enums";
+import { ResourceType } from "./enums.js";
 
 export const crawlSources = {
     announcement: {

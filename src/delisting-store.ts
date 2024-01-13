@@ -1,15 +1,16 @@
-import { notifyAndLogInfo } from "./logger";
-import type { DelistedSymbol } from "./types";
+import { notifyAndLogInfo } from "./logger.js";
+import type { DelistedSymbol } from "./types.js";
+import * as fs from "fs";
 
 class DelistingStore {
     store: DelistedSymbol[] = [];
-    file: string = `${import.meta.dir}/delisted-symbols.json`;
 
     constructor() {}
 
     async initStore() {
-        const file = Bun.file(this.file);
-        const symbols = await file.json();
+        const symbols = JSON.parse(
+            fs.readFileSync(`./dist/delisted-symbols.json`, "utf8")
+        );
         this.store = symbols;
     }
 
@@ -29,7 +30,10 @@ class DelistingStore {
                 `New delisted symbol: ${symbol.symbol}, exchange: ${symbol.exchange}, url: ${symbol.url}`,
                 "delisting-store"
             );
-            await Bun.write(this.file, JSON.stringify(this.store, null, 2));
+            fs.writeFileSync(
+                `./dist/delisted-symbols.json`,
+                JSON.stringify(this.store, null, 2)
+            );
         }
     }
 }

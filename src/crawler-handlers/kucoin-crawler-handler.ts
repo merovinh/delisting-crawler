@@ -1,7 +1,7 @@
-import { SYMBOL_PAIR_REGEXP } from "../constants";
-import { delistingStore } from "../delisting-store";
-import { logger, notifyAndLogError } from "../logger";
-import type { DelistedSymbol, DelistingAnnouncementParser } from "../types";
+import { SYMBOL_PAIR_REGEXP } from "../constants.js";
+import { delistingStore } from "../delisting-store.js";
+import { logger, notifyAndLogError } from "../logger.js";
+import type { DelistedSymbol, DelistingAnnouncementParser } from "../types.js";
 
 const topic = "kucoin";
 
@@ -23,7 +23,7 @@ export const kucoinAnnouncementHandler: DelistingAnnouncementParser = async (
             try {
                 const delistingSymbols: DelistedSymbol[] = [];
                 const rawResponse = await fetch(url);
-                const content = await rawResponse.json();
+                const content: any = await rawResponse.json();
                 const regexpResult = content.content.match(SYMBOL_PAIR_REGEXP); // should be an array, like ['CGG/USDT', 'ACA/BTC', 'FALCONS/USDT']
                 const result = [...new Set([...(regexpResult || [])])];
 
