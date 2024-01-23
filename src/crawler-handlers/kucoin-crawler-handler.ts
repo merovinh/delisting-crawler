@@ -26,7 +26,7 @@ export const kucoinCoinHandler: DelistingCrawlerParser = async (
             await delistingStore.addSymbols([
                 {
                     exchange,
-                    symbol: market,
+                    symbol: market.replace("-", "/"),
                     timestamp: Date.now(),
                     url: requestUrl,
                 },
