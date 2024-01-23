@@ -27,7 +27,7 @@ class DelistingStore {
 
             this.store.push(symbol);
             notifyAndLogInfo(
-                `New delisted symbol: ${symbol.symbol}, exchange: ${symbol.exchange}, url: ${symbol.url}`,
+                `New delisting: ${symbol.symbol}, exchange: ${symbol.exchange}, url: ${symbol.url}`,
                 "delisting-store"
             );
             fs.writeFileSync(
