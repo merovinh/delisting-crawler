@@ -9,6 +9,9 @@ export interface CrawlSource {
     type: ResourceType;
 }
 export interface CrawlSources {
+    oneCoin: {
+        [exchange: string]: string;
+    };
     announcement: {
         [exchange: string]: CrawlSource;
     };
@@ -27,3 +30,10 @@ export interface DelistedSymbol {
     timestamp: number;
     url?: string;
 }
+
+export type DelistingCrawlerParser = (
+    exchange: ExchangeEnum,
+    market: string,
+    requestUrl: string,
+    response: any
+) => void;

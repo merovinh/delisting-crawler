@@ -1,6 +1,12 @@
 import { ResourceType } from "./enums.js";
 
 export const crawlSources = {
+    oneCoin: {
+        okx: "https://www.okx.com/priapi/v5/public/trade/notice?instId={{symbol}}&instType=SPOT", // DOME-USDT
+        kucoin: "https://www.kucoin.com/_api/trade-front/risk/tips/{{symbol}}", // HERO-USDT
+        binance: "",
+        bybit: "",
+    },
     announcement: {
         // Announcement pages
         okx: {
