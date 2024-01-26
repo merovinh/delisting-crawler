@@ -27,39 +27,49 @@ export class DelistingCrawler {
     }
 
     async checkEachCoin() {
-        this.checkEachCoinWithInterval(
-            ExchangeEnum.Kucoin,
-            kucoinCoinHandler,
-            1000,
-            1000
-        );
+        if (process.env["CHECK_EACH_COIN_KUCOIN"] === "true") {
+            this.checkEachCoinWithInterval(
+                ExchangeEnum.Kucoin,
+                kucoinCoinHandler,
+                1000,
+                1000
+            );
+        }
     }
 
     async checkAnnouncementPages() {
-        this.checkAnnouncementPageWithInterval(
-            ExchangeEnum.Bybit,
-            bybitAnnouncementHandler,
-            5000,
-            5000
-        );
-        this.checkAnnouncementPageWithInterval(
-            ExchangeEnum.Kucoin,
-            kucoinAnnouncementHandler,
-            5000,
-            5000
-        );
-        this.checkAnnouncementPageWithInterval(
-            ExchangeEnum.Binance,
-            binanceAnnouncementHandler,
-            10000,
-            10000
-        );
-        this.checkAnnouncementPageWithInterval(
-            ExchangeEnum.Okx,
-            okxAnnouncementHandler,
-            5000,
-            5000
-        );
+        if (process.env["CHECK_ANNOUNCEMENT_BYBIT"] === "true") {
+            this.checkAnnouncementPageWithInterval(
+                ExchangeEnum.Bybit,
+                bybitAnnouncementHandler,
+                5000,
+                5000
+            );
+        }
+        if (process.env["CHECK_ANNOUNCEMENT_KUCOIN"] === "true") {
+            this.checkAnnouncementPageWithInterval(
+                ExchangeEnum.Kucoin,
+                kucoinAnnouncementHandler,
+                5000,
+                5000
+            );
+        }
+        if (process.env["CHECK_ANNOUNCEMENT_BINANCE"] === "true") {
+            this.checkAnnouncementPageWithInterval(
+                ExchangeEnum.Binance,
+                binanceAnnouncementHandler,
+                10000,
+                10000
+            );
+        }
+        if (process.env["CHECK_ANNOUNCEMENT_OKX"] === "true") {
+            this.checkAnnouncementPageWithInterval(
+                ExchangeEnum.Okx,
+                okxAnnouncementHandler,
+                5000,
+                5000
+            );
+        }
     }
 
     async checkEachCoinWithInterval(
